@@ -18,15 +18,15 @@ public class NoteController {
     }
 
     @GetMapping("/{ownerId}")
-    public Optional<Note> getAllNotesByOwner(@PathVariable Long ownerId) {
+    public List<Note> getAllNotesByOwner(@PathVariable Long ownerId) {
         return noteService.getAllNotesByOwner(ownerId);
     }
 
-    @GetMapping("/{ownerId}/{id}")
+    @GetMapping("/{ownerId}/{title}")
     public Optional<Note> getNoteByOwner(
             @PathVariable("ownerId") Long ownerId,
-            @PathVariable("id") Long id) {
-        return noteService.getNoteByOwner(id, ownerId);
+            @PathVariable("title") String title) {
+        return noteService.getNoteByOwner(title, ownerId);
     }
 
     @PostMapping("/{ownerId}")

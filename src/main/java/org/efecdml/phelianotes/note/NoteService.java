@@ -20,23 +20,23 @@ public class NoteService {
         return noteRepository.findAll();
     }
 
-    public Optional<Note> getAllNotesByOwner(Long ownerId) {
+    public List<Note> getAllNotesByOwner(Long ownerId) {
         return noteRepository.findAllByOwner(ownerId);
     }
 
-    public Optional<Note> getNoteByOwner(Long id, Long ownerId) {
-        return noteRepository.findByIdAndOwner(id, ownerId);
+    public Optional<Note> getNoteByOwner(String title, Long ownerId) {
+        return noteRepository.findByTitleAndOwner(title, ownerId);
     }
 
     public void addNote(Note note, Long ownerId) {
-        Optional<Note> noteOptional = noteRepository.findByIdAndOwner(note.getId(), ownerId);
+        Optional<Note> noteOptional = noteRepository.findByTitleAndOwner(note.getTitle(), ownerId);
 
         if (noteOptional.isPresent()) {
             throw new IllegalStateException("Note with title " + note.getTitle() + " already exists.");
         }
 
         AppUser appUser = appUserRepository.findById(ownerId)
-                .orElseThrow(() -> new IllegalStateException("User not found.."));
+                .orElseThrow(() -> new IllegalStateException("User couldn't found.."));
 
         note.setOwner(appUser);
         note.setDateCreated(LocalDateTime.now());
@@ -60,9 +60,9 @@ public class NoteService {
                 if (title != null && title.length() > 0) {
                     note.setTitle(title);
                     note.setDateUpdated(LocalDateTime.now());
-                } else {
-                    throw new IllegalStateException("This title is already exists..");
                 }
+            } else {
+                throw new IllegalStateException("This title is already exists..");
             }
         }
 
